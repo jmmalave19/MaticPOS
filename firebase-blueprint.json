@@ -1,0 +1,103 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Producto del inventario",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID único del producto" },
+        "name": { "type": "string", "description": "Nombre del producto" },
+        "barcode": { "type": "string", "description": "Código de barras o SKU" },
+        "category": { "type": "string", "description": "Categoría del producto" },
+        "priceCurrency": { "type": "string", "enum": ["USD", "VES"], "description": "Moneda en la que se fijó el precio" },
+        "priceUsd": { "type": "number", "description": "Precio en dólares" },
+        "priceBs": { "type": "number", "description": "Precio en bolívares" },
+        "costUsd": { "type": "number", "description": "Costo en dólares" },
+        "costBs": { "type": "number", "description": "Costo en bolívares" },
+        "sellingPrice": { "type": "number", "description": "Precio de venta en Bs" },
+        "costPrice": { "type": "number", "description": "Costo en Bs" },
+        "stock": { "type": "number", "description": "Existencias disponibles" },
+        "minStockAlert": { "type": "number", "description": "Alerta de stock mínimo" },
+        "notes": { "type": "string", "description": "Notas adicionales" },
+        "movements": { "type": "array", "description": "Historial de movimientos de stock del producto" },
+        "createdAt": { "type": "string", "description": "Fecha de creación ISO" },
+        "updatedAt": { "type": "string", "description": "Fecha de actualización ISO" }
+      },
+      "required": ["id", "name", "priceCurrency", "priceUsd", "priceBs", "stock"]
+    },
+    "Sale": {
+      "title": "Sale",
+      "description": "Registro de venta realizada",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID de la venta" },
+        "receiptNumber": { "type": "string", "description": "Número de ticket" },
+        "sessionId": { "type": "string", "description": "ID de la jornada de trabajo" },
+        "subtotalBs": { "type": "number", "description": "Subtotal en Bs" },
+        "discountBs": { "type": "number", "description": "Descuento en Bs" },
+        "totalBs": { "type": "number", "description": "Total en Bs" },
+        "totalUsd": { "type": "number", "description": "Total en USD" },
+        "exchangeRateAtSale": { "type": "number", "description": "Tasa de cambio aplicada" },
+        "paymentMethod": { "type": "string", "description": "Método de pago" },
+        "amountTenderedInCurrency": { "type": "number", "description": "Monto entregado" },
+        "changeGivenInCurrency": { "type": "number", "description": "Vuelto entregado" },
+        "customerName": { "type": "string", "description": "Nombre del cliente" },
+        "customerDoc": { "type": "string", "description": "Documento del cliente" },
+        "notes": { "type": "string", "description": "Observaciones" },
+        "timestamp": { "type": "string", "description": "Fecha y hora ISO" }
+      },
+      "required": ["id", "receiptNumber", "totalBs", "totalUsd", "paymentMethod", "timestamp"]
+    },
+    "WorkDaySession": {
+      "title": "WorkDaySession",
+      "description": "Sesión de jornada laboral / caja",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "ID de la jornada" },
+        "status": { "type": "string", "enum": ["open", "closed"], "description": "Estado de la jornada" },
+        "dateString": { "type": "string", "description": "Fecha YYYY-MM-DD" },
+        "openedAt": { "type": "string", "description": "Fecha y hora de apertura ISO" },
+        "closedAt": { "type": "string", "description": "Fecha y hora de cierre ISO" },
+        "initialCashBs": { "type": "number", "description": "Fondo inicial en Bs" },
+        "initialCashUsd": { "type": "number", "description": "Fondo inicial en USD" },
+        "totalSalesCount": { "type": "number", "description": "Cantidad de ventas" },
+        "totalSalesBs": { "type": "number", "description": "Total ventas en Bs" },
+        "totalSalesUsd": { "type": "number", "description": "Total ventas en USD" },
+        "grossProfitBs": { "type": "number", "description": "Ganancia bruta en Bs" },
+        "commissionBs": { "type": "number", "description": "Comisión calculada en Bs" }
+      },
+      "required": ["id", "status", "dateString", "openedAt"]
+    },
+    "AppSettings": {
+      "title": "AppSettings",
+      "description": "Configuración global de la app",
+      "type": "object",
+      "properties": {
+        "exchangeRateUsdToBs": { "type": "number", "description": "Tasa de cambio USD a Bs" },
+        "exchangeRateMode": { "type": "string", "enum": ["manual", "auto"], "description": "Modalidad de actualización de la tasa" },
+        "exchangeRateLastSync": { "type": "string", "description": "Fecha y hora ISO de la última sincronización" },
+        "exchangeRateSourceDate": { "type": "string", "description": "Fecha oficial reportada por la API" },
+        "businessName": { "type": "string", "description": "Nombre del negocio" }
+      },
+      "required": ["exchangeRateUsdToBs"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Colección de productos del inventario"
+    },
+    "/sales/{saleId}": {
+      "schema": "Sale",
+      "description": "Colección de ventas históricas"
+    },
+    "/sessions/{sessionId}": {
+      "schema": "WorkDaySession",
+      "description": "Colección de jornadas de trabajo y cierres de caja"
+    },
+    "/settings/{settingId}": {
+      "schema": "AppSettings",
+      "description": "Configuraciones del sistema"
+    }
+  }
+}

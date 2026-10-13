@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Connection test document
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // Products collection
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update: if isValidId(productId) 
+        && request.resource.data.name is string 
+        && request.resource.data.name.size() > 0 
+        && request.resource.data.name.size() <= 200;
+      allow delete: if isValidId(productId);
+    }
+
+    // Sales collection
+    match /sales/{saleId} {
+      allow read: if true;
+      allow create: if isValidId(saleId)
+        && request.resource.data.receiptNumber is string
+        && request.resource.data.totalBs is number;
+      allow update: if false; // Sales are immutable once recorded
+      allow delete: if isValidId(saleId); // Allow cancellation
+    }
+
+    // Sessions collection (Jornadas de trabajo / Cierre)
+    match /sessions/{sessionId} {
+      allow read: if true;
+      allow create, update: if isValidId(sessionId)
+        && request.resource.data.status in ['open', 'closed'];
+      allow delete: if false;
+    }
+
+    // App settings collection
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isValidId(settingId);
+    }
+
+    // Adjustments collection
+    match /adjustments/{adjId} {
+      allow read: if true;
+      allow create, update: if isValidId(adjId);
+      allow delete: if isValidId(adjId);
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "summary": "Plan de implementación para migrar StockVenta de Next.js a React Router v7 en modalidad SPA con Vite, URLs independientes por módulo, soporte PWA offline y conservación estricta de la lógica MVC y Firebase.",
+  "updatedAt": "2026-10-13T16:53:55.462017319Z",
+  "requestFeedback": true,
+  "userFacing": true
+}

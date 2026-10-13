@@ -1,0 +1,6 @@
+{
+  "name": "StockVenta - Inventario y Punto de Venta Multimoneda",
+  "description": "Sistema integral de punto de venta (POS) e inventario con soporte multimoneda, lector de códigos de barra, reportes de ventas del día e interfaz optimizada para móviles.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
